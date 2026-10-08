@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Product admin</title>
+<style>
+:root{--bg:#0c1424;--card:#15213a;--ink:#f3f6fb;--mute:#a3b3cb;--line:#273856;--cta:#ffb400;--ok:#2ee59d;--red:#ff6b6b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+.w{max-width:640px;margin:0 auto;padding:16px}h1{font-size:22px;margin:6px 0 14px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:12px 0 4px;font-size:15px}small{color:var(--mute);display:block;margin-top:3px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 16px;cursor:pointer;background:var(--cta);color:#241a00}
+button.g{background:var(--line);color:var(--ink)}button.d{background:var(--red);color:#fff}button:disabled{opacity:.5}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.t{position:relative}.t img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.t b{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--red);text-align:center;line-height:22px;font-size:13px;cursor:pointer}
+#st{margin:10px 0;font-weight:600}.ok{color:var(--ok)}.er{color:var(--red)}
+a{color:var(--cta)}
+</style>
+</head>
+<body><div class="w">
+<h1>Product admin</h1>
+<div class="c" id="login">
+  <label>Backend URL (Apps Script Web app)</label><input id="ep" placeholder="https://script.google.com/macros/s/.../exec">
+  <label>Admin password</label><input id="pw" type="password">
+  <p><button id="go">Log in</button></p><div id="le" class="er"></div>
+</div>
+
+<div id="main" style="display:none">
+  <div class="c"><label>Product</label>
+    <select id="sel"></select>
+    <p><button class="g" id="new">+ New product</button></p></div>
+  <div class="c">
+    <label>Product ID (letters, numbers, dashes)</label><input id="id" placeholder="phone-holder"><small>Your ad link will be ...index.html?p=this-id</small>
+    <label>Title (Bangla)</label><input id="title">
+    <label>Short line under the title</label><input id="subtitle">
+    <div class="row"><div><label>Price</label><input id="price" type="number" inputmode="numeric"></div><div><label>Old price (crossed out)</label><input id="oldPrice" type="number" inputmode="numeric"></div></div>
+    <div class="row"><div><label>Delivery charge in ৳ (0 = free)</label><input id="delivery" type="number" inputmode="numeric"></div><div><label>Stock left (0 = hide)</label><input id="stockLeft" type="number" inputmode="numeric"></div></div>
+    <label>Top banner text</label><input id="topbar" placeholder="ফ্রি ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।">
+    <label>Benefits (one per line: Heading | Detail)</label><textarea id="benefits" rows="5"></textarea>
+    <label>Specs (one per line: Name | Value)</label><textarea id="specs" rows="5"></textarea>
+    <label>Photos (3-4 recommended; the first one shows first)</label>
+    <input id="files" type="file" accept="image/*" multiple><div class="thumbs" id="thumbs"></div><small id="up"></small>
+    <label>Customer review photos (screenshots of real feedback, shown in a slider)</label>
+    <input id="rfiles" type="file" accept="image/*" multiple><div class="thumbs" id="rthumbs"></div><small id="rup"></small>
+    <div class="row"><div><label>WhatsApp number (e.g. 8801790366201)</label><input id="whatsapp"></div><div><label>Messenger page username</label><input id="messenger"></div></div>
+    <label>Meta Pixel ID (optional)</label><input id="fbPixelId">
+  </div>
+  <div id="st"></div>
+  <p><button id="save">Save product</button> <button class="d" id="del">Delete</button></p>
+  <div class="c" id="lnk" style="display:none">Landing page link:<br><a id="lk" target="_blank"></a></div>
+</div>
+
+<script>
+var $ = function(i){return document.getElementById(i)}, S = {ep:"", pw:""}, P = {}, images = [], reviews = [];
+try { S = JSON.parse(localStorage.getItem("adm")) || S; } catch(e) {}
+$("ep").value = S.ep; $("pw").value = S.pw;
+function api(action, extra){
+  var body = Object.assign({action:action, password:S.pw}, extra || {});
+  return fetch(S.ep, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(d){ if(d.error) throw new Error(d.error); return d; });
+}
+function say(t, ok){ $("st").textContent = t; $("st").className = ok ? "ok" : "er"; }
+$("go").onclick = function(){
+  S = {ep:$("ep").value.trim(), pw:$("pw").value}; $("le").textContent = "";
+  api("list").then(function(d){ localStorage.setItem("adm", JSON.stringify(S)); P = d.products; $("login").style.display = "none"; $("main").style.display = "block"; fillSel(Object.keys(P)[0]); })
+    .catch(function(e){ $("le").textContent = "Could not log in: " + e.message; });
+};
+function fillSel(pick){
+  var ids = Object.keys(P); $("sel").innerHTML = ids.map(function(i){return '<option value="'+i+'">'+i+' — '+(P[i].title||"").slice(0,40)+'</option>'}).join("");
+  if(ids.length){ $("sel").value = pick || ids[0]; load($("sel").value); } else blank();
+}
+$("sel").onchange = function(){ load($("sel").value); };
+$("new").onclick = blank;
+var F = ["title","subtitle","price","oldPrice","delivery","stockLeft","topbar","whatsapp","messenger","fbPixelId"];
+function blank(){ $("id").value = ""; F.forEach(function(k){ $(k).value = ""; }); $("benefits").value = ""; $("specs").value = "";
+  var last = P[Object.keys(P)[0]] || {}; ["whatsapp","messenger","fbPixelId"].forEach(function(k){ $(k).value = last[k] || ""; });
+  $("delivery").value = 0; $("stockLeft").value = 15; images = []; reviews = []; thumbs(); $("lnk").style.display = "none"; }
+function load(id){ var d = P[id]; if(!d) return; $("id").value = id; F.forEach(function(k){ $(k).value = d[k] == null ? "" : d[k]; });
+  $("benefits").value = (d.benefits||[]).map(function(r){return r.join(" | ")}).join("\n"); $("specs").value = (d.specs||[]).map(function(r){return r.join(" | ")}).join("\n");
+  images = (d.images||[]).slice(); reviews = (d.reviews||[]).slice(); thumbs(); link(id); }
+function link(id){ var u = location.href.replace(/admin\.html.*$/, "index.html") + "?p=" + id; $("lk").href = u; $("lk").textContent = u; $("lnk").style.display = "block"; }
+function drawThumbs(arr, id){ $(id).innerHTML = arr.map(function(u,i){return '<div class="t"><img src="'+u+'"><b data-i="'+i+'">×</b></div>'}).join("");
+  Array.prototype.forEach.call($(id).querySelectorAll("b"), function(b){ b.onclick = function(){ arr.splice(Number(b.dataset.i),1); thumbs(); }; }); }
+function thumbs(){ drawThumbs(images, "thumbs"); drawThumbs(reviews, "rthumbs"); }
+function lines(t){ return t.split("\n").map(function(l){return l.trim()}).filter(Boolean).map(function(l){ var p = l.split("|"); return [p[0].trim(), (p.slice(1).join("|")||"").trim()]; }); }
+function shrink(file, m){ return new Promise(function(res, rej){ var im = new Image(); im.onload = function(){ var s = Math.min(1, m / Math.max(im.width, im.height)), c = document.createElement("canvas");
+  c.width = Math.round(im.width * s); c.height = Math.round(im.height * s); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL("image/jpeg", .8).split(",")[1]); }; im.onerror = rej; im.src = URL.createObjectURL(file); }); }
+function wireUpload(inp, getArr, st, max){ $(inp).onchange = async function(){
+  var fs = Array.from(this.files); this.value = "";
+  for(var i = 0; i < fs.length; i++){ $(st).textContent = "Uploading " + (i+1) + " of " + fs.length + "..."; try { var d = await api("upload", {b64: await shrink(fs[i], max)}); getArr().push(d.url); thumbs(); } catch(e){ $(st).textContent = "Upload failed: " + e.message; return; } }
+  $(st).textContent = "Uploaded. Press Save product to publish."; }; }
+wireUpload("files", function(){return images}, "up", 1000); wireUpload("rfiles", function(){return reviews}, "rup", 1400);
+$("save").onclick = function(){
+  var id = $("id").value.trim().toLowerCase().replace(/[^a-z0-9-]/g, ""); if(!id) return say("Enter a product ID (letters, numbers, dashes).");
+  if(!$("title").value.trim() || !(Number($("price").value) > 0)) return say("Title and price are required.");
+  var d = {title:$("title").value.trim(), subtitle:$("subtitle").value.trim(), price:Number($("price").value), oldPrice:Number($("oldPrice").value)||0, delivery:Number($("delivery").value)||0, stockLeft:Number($("stockLeft").value)||0,
+    topbar:$("topbar").value.trim(), whatsapp:$("whatsapp").value.replace(/\D/g,""), messenger:$("messenger").value.trim(), fbPixelId:$("fbPixelId").value.trim(), benefits:lines($("benefits").value), specs:lines($("specs").value), images:images, reviews:reviews, currency:"৳"};
+  $("save").disabled = true; say("Saving...", true);
+  api("save", {id:id, data:d}).then(function(){ P[id] = d; fillSel(id); say("Saved. Your page is updated.", true); }).catch(function(e){ say("Save failed: " + e.message); }).then(function(){ $("save").disabled = false; });
+};
+$("del").onclick = function(){ var id = $("id").value.trim(); if(!id || !P[id] || !confirm("Delete " + id + "?")) return; api("delete", {id:id}).then(function(){ delete P[id]; fillSel(); say("Deleted.", true); }).catch(function(e){ say(e.message); }); };
+if(S.ep && S.pw) $("go").click();
+</script>
+</div></body>
+</html>

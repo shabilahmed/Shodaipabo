@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>সদাই পাবো | ক্যাশ অন ডেলিভারি</title>
+<meta property="og:title" content="সদাই পাবো | ক্যাশ অন ডেলিভারি">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#A6E3E9;--card:#E3FDFD;--ink:#0d3b40;--mute:#2d575d;--line:#8fd3da;--cta:#ff7a45;--ctaink:#2b0f00;--green:#0a7d57;--red:#d6393f;--blue:#0b6bd3;--deep:#0d3b40;--accent:#71C9CE;--price:#0a6a72;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth;background:var(--bg)}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#CBF1F5 0,var(--bg) 460px);color:var(--ink);font:400 17px/1.7 "Noto Sans Bengali",system-ui,sans-serif;padding-bottom:86px}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.bar{background:var(--deep);color:#e3fdfd;text-align:center;font-weight:700;font-size:15px;padding:7px 10px}
+h1{font-size:clamp(28px,7.6vw,38px);line-height:1.3;margin:18px 0 0;font-weight:700}
+h2{font-size:25px;line-height:1.35;margin:0 0 12px}
+.sub{color:var(--mute);margin:6px 0 0}
+.car{position:relative;margin:16px 0 6px}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:20px;scrollbar-width:none;background:var(--card);border:1px solid var(--line)}
+.track::-webkit-scrollbar{display:none}
+.track img{flex:0 0 100%;width:100%;aspect-ratio:1/1;object-fit:cover;scroll-snap-align:center;display:block}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:rgba(13,59,64,.78);color:#fff;font-size:22px;cursor:pointer}
+.rtrack img{aspect-ratio:4/5;object-fit:contain;background:var(--card)}
+.nav.l{left:8px}.nav.r{right:8px}
+.dots{display:flex;justify-content:center;gap:7px;margin:10px 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(13,59,64,.25)}.dots i.on{background:var(--deep);width:22px;border-radius:6px}
+.badge{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;font-weight:700;border-radius:99px;padding:2px 12px;z-index:2}
+.deal{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:6px}
+.pricebox{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.price{font-size:46px;font-weight:700;color:var(--price);line-height:1.1}
+.old{color:var(--mute);text-decoration:line-through;font-size:20px}
+.save{color:var(--green);font-weight:600}
+.stock{margin:12px 0 0;font-weight:600;font-size:15px;color:var(--red)}
+.meter{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;background:var(--red)}
+.btn{display:block;width:100%;border:0;border-radius:14px;background:var(--cta);color:var(--ctaink);font:700 22px "Baloo Da 2","Noto Sans Bengali",sans-serif;padding:14px;text-align:center;text-decoration:none;cursor:pointer;margin-top:14px;box-shadow:0 6px 0 #b84a1f}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #b84a1f}
+.btn:disabled{opacity:.6}
+.pulse{animation:pl 2.2s ease-in-out infinite}@keyframes pl{50%{transform:scale(1.025)}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.nav:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+section{padding:22px 0}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:14px;font-weight:600}
+.trust div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 4px}
+ul.ben{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+ul.ben li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px 12px 44px;position:relative}
+ul.ben li:before{content:"✓";position:absolute;left:14px;top:12px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--deep);font-weight:700;text-align:center;line-height:22px;font-size:14px}
+ul.ben b{display:block}ul.ben span{color:var(--mute);font-size:16px}
+.steps{display:grid;gap:8px;counter-reset:s}.steps div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;counter-increment:s}
+.steps div:before{content:counter(s);display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--deep);color:#e3fdfd;text-align:center;font-weight:700;margin-right:10px}
+.spec{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden}
+.spec td{padding:10px 14px;border-bottom:1px solid var(--line)}.spec td:first-child{color:var(--mute);width:42%}
+.chat{display:grid;gap:10px}.chat a{display:block;border-radius:14px;padding:13px;text-align:center;font-weight:700;text-decoration:none;color:#fff}
+.wa{background:#1a9c4b}.ms{background:#0a7cff}
+.note{color:var(--mute);font-size:15px;margin:6px 0 12px}
+form{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+label{display:block;font-weight:600;margin:14px 0 6px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:#f6feff;border:1.5px solid var(--line);border-radius:12px;padding:12px}
+.total{display:flex;justify-content:space-between;margin:18px 0 4px;font-weight:700;font-size:20px}.total span:last-child{color:var(--price)}
+.err{color:var(--red);font-size:15px}
+.done{display:none;text-align:center;padding:24px 8px}.done h2{color:var(--green)}.done a{color:var(--price);font-weight:700}
+.sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(227,253,253,.97);border-top:1px solid var(--line);z-index:5}
+.sticky .btn{max-width:560px;margin:0 auto;padding:11px}
+#msg{text-align:center;padding:90px 20px;color:var(--mute)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 30px}
+.site{margin-top:8px;font:700 20px "Baloo Da 2",sans-serif;color:var(--deep);letter-spacing:.5px}
+h1,h2,.price,.bar,.badge,.save{font-family:"Baloo Da 2","Noto Sans Bengali",sans-serif}
+.bar{font-size:16px}
+</style>
+</head>
+<body>
+<div id="msg">লোড হচ্ছে...</div>
+<div id="app" style="display:none">
+<div class="bar" id="topbar"></div>
+<main class="wrap">
+  <h1 id="title"></h1><p class="sub" id="subtitle"></p>
+  <div class="car"><span class="badge" id="tag"></span><div class="track" id="track"></div>
+    <button class="nav l" id="prev" aria-label="আগের ছবি">‹</button><button class="nav r" id="next" aria-label="পরের ছবি">›</button></div>
+  <div class="dots" id="dots"></div>
+  <div class="deal">
+    <div class="pricebox"><span class="price" id="price"></span><span class="old" id="old"></span><span class="save" id="save"></span></div>
+    <p class="note" id="delline" style="margin:10px 0 0;font-weight:600;color:var(--ink)"></p>
+    <div id="stockBox"><p class="stock" id="stock"></p><div class="meter"><i id="meter"></i></div></div>
+    <a class="btn pulse" href="#order">অর্ডার করুন, ডেলিভারিতে টাকা দিন</a>
+  </div>
+  <section><div class="trust" id="trust"></div></section>
+  <section><h2>কেন কিনবেন?</h2><ul class="ben" id="ben"></ul></section>
+  <section><h2>কীভাবে অর্ডার করবেন?</h2>
+    <div class="steps"><div>নিচের ফর্মে নাম, নম্বর ও ঠিকানা দিন</div><div>আমরা ফোন করে অর্ডার কনফার্ম করব</div><div>পণ্য হাতে পেয়ে দেখে নিন, তারপর টাকা দিন</div></div></section>
+  <section id="specSec"><h2>বিস্তারিত তথ্য</h2><table class="spec" id="spec"></table></section>
+  <section id="revSec"><h2>ক্রেতারা কী বলছেন</h2>
+    <div class="car"><div class="track rtrack" id="rtrack"></div>
+      <button class="nav l" id="rprev" aria-label="আগের রিভিউ">‹</button><button class="nav r" id="rnext" aria-label="পরের রিভিউ">›</button></div>
+    <div class="dots" id="rdots"></div></section>
+  <section id="chatSec"><h2>আরও জানতে চান?</h2><p class="note">সরাসরি মেসেজ করুন, আমরা দ্রুত উত্তর দিই।</p><div class="chat" id="chat"></div></section>
+  <section id="order"><h2>অর্ডার করুন, ডেলিভারিতে টাকা দিন</h2>
+    <form id="f" novalidate>
+      <label for="n">আপনার নাম</label><input id="n" autocomplete="name"><div class="err" id="en"></div>
+      <label for="p">মোবাইল নম্বর</label><input id="p" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"><div class="err" id="ep"></div>
+      <label for="c">জেলা / এলাকা</label><input id="c" autocomplete="address-level2"><div class="err" id="ec"></div>
+      <label for="a">পূর্ণ ঠিকানা</label><textarea id="a" rows="3" autocomplete="street-address" placeholder="বাসা, রোড, থানা, কাছের পরিচিত জায়গা"></textarea><div class="err" id="ea"></div>
+      <label for="q">কয়টি নিবেন?</label><select id="q"></select>
+      <div class="total"><span>ডেলিভারিতে দিবেন</span><span id="tot"></span></div>
+      <p class="note" id="delnote"></p>
+      <button class="btn" type="submit" id="sub">অর্ডার কনফার্ম করুন</button>
+      <p class="note" style="text-align:center;margin-top:12px">এখন কোনো টাকা দিতে হবে না। পাঠানোর আগে আমরা ফোন করে নিশ্চিত করব।</p>
+    </form>
+    <div class="done" id="done"><h2>অর্ডার পেয়েছি, ধন্যবাদ!</h2><p>শীঘ্রই <b id="dp"></b> নম্বরে ফোন করে কনফার্ম করব।</p><p id="dwa"></p></div>
+  </section>
+  <footer>আপনার তথ্য শুধু এই অর্ডার ডেলিভারির জন্য ব্যবহার হবে।<div class="site">shodaipabo.com</div></footer>
+</main>
+<div class="sticky" id="sticky"><a class="btn" href="#order">অর্ডার করুন, ডেলিভারিতে টাকা দিন</a></div>
+</div>
+
+<script>
+var ENDPOINT = "https://script.google.com/macros/s/AKfycbyseMvQ1leEoIoDhHIvQv-skSZk33gU_-weeR1sqiq-MoYP1AjSCaOxoh9w_0DPN5Q/exec";   /* একবারই বসান: Google Apps Script Web app URL */
+var $ = function(i){return document.getElementById(i)};
+var bn = function(s){return String(s).replace(/\d/g,function(d){return "০১২৩৪৫৬৭৮৯"[d]})};
+var en = function(s){return String(s).replace(/[০-৯]/g,function(d){return "০১২৩৪৫৬৭৮৯".indexOf(d)})};
+var esc = function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var C, imgs = [], cur = 0, rimgs = [], rcur = 0, built = false, pid = new URLSearchParams(location.search).get("p") || "";
+var money = function(n){return (C.currency || "৳") + bn(n)};
+
+function ph(i){var c=["#1f5eff","#7a3cff","#12805c","#c2410c"][i%4];
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="'+c+'"/><text x="200" y="210" font-size="26" fill="#fff" text-anchor="middle" font-family="sans-serif">Product photo '+(i+1)+'</text></svg>');}
+
+function render(d){
+  C = d; document.title = (d.title || "অর্ডার করুন") + " | ক্যাশ অন ডেলিভারি";
+  $("msg").style.display = "none"; $("app").style.display = "block";
+  $("topbar").textContent = d.topbar || (Number(d.delivery) > 0 ? "সারা দেশে ক্যাশ অন ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।" : "ফ্রি ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।");
+  $("delline").textContent = Number(d.delivery) > 0 ? "ডেলিভারি চার্জ: " + money(d.delivery) : "ডেলিভারি চার্জ: ফ্রি";
+  $("title").textContent = d.title; $("subtitle").textContent = d.subtitle || "";
+  $("price").textContent = money(d.price); $("old").textContent = d.oldPrice ? money(d.oldPrice) : "";
+  var pct = d.oldPrice > d.price ? Math.round((1 - d.price / d.oldPrice) * 100) : 0;
+  $("save").textContent = pct ? bn(pct) + "% সাশ্রয়" : ""; $("tag").textContent = pct ? "-" + bn(pct) + "%" : ""; $("tag").style.display = pct ? "" : "none";
+  $("stockBox").style.display = d.stockLeft > 0 ? "" : "none";
+  $("stock").textContent = "স্টকে আছে মাত্র " + bn(d.stockLeft) + "টি"; $("meter").style.width = Math.min(100, d.stockLeft * 3) + "%";
+  $("trust").innerHTML = ["ক্যাশ অন ডেলিভারি","পণ্য দেখে টাকা দিন","সারা দেশে ডেলিভারি"].map(function(t){return "<div>"+t+"</div>"}).join("");
+  $("ben").innerHTML = (d.benefits || []).map(function(b){return "<li><b>"+esc(b[0])+"</b><span>"+esc(b[1]||"")+"</span></li>"}).join("");
+  $("spec").innerHTML = (d.specs || []).map(function(r){return "<tr><td>"+esc(r[0])+"</td><td>"+esc(r[1]||"")+"</td></tr>"}).join("");
+  $("specSec").style.display = (d.specs || []).length ? "" : "none";
+  imgs = (d.images && d.images.length) ? d.images : [ph(0),ph(1),ph(2)];
+  $("track").innerHTML = imgs.map(function(s,i){return '<img src="'+esc(s)+'" alt="'+esc(d.title)+' '+bn(i+1)+'"'+(i?' loading="lazy"':'')+'>'}).join("");
+  $("dots").innerHTML = imgs.map(function(){return "<i></i>"}).join(""); cur = 0; dots();
+  rimgs = (d.reviews || []).filter(Boolean); $("revSec").style.display = rimgs.length ? "" : "none";
+  $("rtrack").innerHTML = rimgs.map(function(s,i){return '<img src="'+esc(s)+'" alt="ক্রেতার রিভিউ '+bn(i+1)+'" loading="lazy">'}).join("");
+  $("rdots").innerHTML = rimgs.map(function(){return "<i></i>"}).join(""); rcur = 0; rdots();
+  var chat = "", ask = encodeURIComponent("আসসালামু আলাইকুম, \"" + d.title + "\" সম্পর্কে আরও জানতে চাই।");
+  if(d.whatsapp) chat += '<a class="wa" href="https://wa.me/'+esc(d.whatsapp)+'?text='+ask+'">হোয়াটসঅ্যাপে মেসেজ করুন</a>';
+  if(d.messenger) chat += '<a class="ms" href="https://m.me/'+esc(d.messenger)+'">মেসেঞ্জারে মেসেজ করুন</a>';
+  $("chat").innerHTML = chat; $("chatSec").style.display = chat ? "" : "none";
+  var sel = $("q"), keep = sel.value; sel.innerHTML = "";
+  for(var k=1;k<=5;k++){var o=document.createElement("option");o.value=k;o.textContent=bn(k)+"টি";sel.appendChild(o);} if(keep) sel.value = keep;
+  $("delnote").textContent = d.delivery ? "ডেলিভারি চার্জ " + money(d.delivery) + " সহ" : "ডেলিভারি চার্জ ফ্রি"; total();
+  if(d.fbPixelId && !window.fbq){!function(f,b,e,v,n,t,s){n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init',d.fbPixelId);fbq('track','PageView');}
+  if(!built){ built = true; wire(); }
+}
+function total(){ $("tot").textContent = money(C.price * Number($("q").value) + Number(C.delivery || 0)); }
+function rdots(){ var x = $("rdots").children; for(var i=0;i<x.length;i++) x[i].className = i===rcur ? "on" : ""; }
+function dots(){ var x = $("dots").children; for(var i=0;i<x.length;i++) x[i].className = i===cur ? "on" : ""; }
+function wire(){
+  var tr = $("track");
+  function go(i){ cur = (i + imgs.length) % imgs.length; tr.scrollTo({left: cur * tr.clientWidth, behavior:"smooth"}); dots(); }
+  tr.addEventListener("scroll", function(){ var n = Math.round(tr.scrollLeft / tr.clientWidth); if(n !== cur){ cur = n; dots(); } });
+  $("prev").onclick = function(){go(cur-1)}; $("next").onclick = function(){go(cur+1)};
+  var rt = $("rtrack");
+  function rgo(i){ rcur = (i + rimgs.length) % rimgs.length; rt.scrollTo({left: rcur * rt.clientWidth, behavior:"smooth"}); rdots(); }
+  rt.addEventListener("scroll", function(){ var n = Math.round(rt.scrollLeft / rt.clientWidth); if(n !== rcur){ rcur = n; rdots(); } });
+  $("rprev").onclick = function(){rgo(rcur-1)}; $("rnext").onclick = function(){rgo(rcur+1)};
+  $("q").onchange = total;
+  new IntersectionObserver(function(e){ $("sticky").style.display = e[0].isIntersecting ? "none" : "block"; }).observe($("order"));
+  $("f").onsubmit = submit;
+}
+function submit(ev){
+  ev.preventDefault(); var ok = true;
+  function chk(id, eid, test, msg){ var v = en($(id).value.trim()), p = test(v); $(eid).textContent = p ? "" : msg; if(!p) ok = false; }
+  chk("n","en",function(v){return v.length > 1},"আপনার নাম লিখুন।");
+  chk("p","ep",function(v){return /^(\+?88)?01[3-9]\d{8}$/.test(v.replace(/[\s-]/g,""))},"সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন।");
+  chk("c","ec",function(v){return v.length > 1},"জেলা বা এলাকার নাম লিখুন।");
+  chk("a","ea",function(v){return v.length > 8},"পূর্ণ ঠিকানা লিখুন, যাতে ডেলিভারি ম্যান খুঁজে পায়।");
+  if(!ok) return;
+  var q = Number($("q").value), t = C.price * q + Number(C.delivery || 0);
+  var order = {name:$("n").value.trim(), phone:en($("p").value.trim()), city:$("c").value.trim(), address:$("a").value.trim(), qty:q, total:t, product:C.title};
+  var btn = $("sub"); btn.disabled = true; btn.textContent = "পাঠানো হচ্ছে...";
+  function finish(){
+    $("dp").textContent = bn(order.phone);
+    if(C.whatsapp) $("dwa").innerHTML = '<a href="https://wa.me/'+esc(C.whatsapp)+'">হোয়াটসঅ্যাপে আমাদের মেসেজ করুন</a>';
+    $("f").style.display = "none"; $("done").style.display = "block"; $("sticky").style.display = "none";
+    window.scrollTo(0, $("order").offsetTop - 10);
+    if(window.fbq) fbq("track","Lead",{value:t,currency:"BDT"});
+  }
+  fetch(ENDPOINT, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(order)})
+    .then(finish).catch(function(){ btn.disabled = false; btn.textContent = "অর্ডার কনফার্ম করুন"; $("ea").textContent = "ইন্টারনেট সমস্যা হয়েছে। আবার চেষ্টা করুন।"; });
+}
+/* load product: show saved copy instantly, then refresh from the sheet */
+var KEY = "prod:" + pid, cached = null;
+try { cached = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
+if(cached && cached.title) render(cached);
+fetch(ENDPOINT + "?p=" + encodeURIComponent(pid)).then(function(r){return r.json()}).then(function(d){
+  if(d && d.title){ try{localStorage.setItem(KEY, JSON.stringify(d));}catch(e){} if(!cached || JSON.stringify(cached) !== JSON.stringify(d)) render(d); }
+  else if(!cached) $("msg").textContent = "এই পণ্যটি পাওয়া যায়নি।";
+}).catch(function(){ if(!cached) $("msg").textContent = "পেজ লোড হয়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।"; });
+</script>
+</body>
+</html>
