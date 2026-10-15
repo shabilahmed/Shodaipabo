@@ -82,7 +82,7 @@ h1,h2,.price,.bar,.badge,.save{font-family:"Baloo Da 2","Noto Sans Bengali",sans
     <div class="pricebox"><span class="price" id="price"></span><span class="old" id="old"></span><span class="save" id="save"></span></div>
     <p class="note" id="delline" style="margin:10px 0 0;font-weight:600;color:var(--ink)"></p>
     <div id="stockBox"><p class="stock" id="stock"></p><div class="meter"><i id="meter"></i></div></div>
-    <a class="btn pulse" href="#order">অর্ডার করুন, ডেলিভারিতে টাকা দিন</a>
+    <a class="btn pulse" href="#order">অর্ডার করুন</a>
   </div>
   <section><div class="trust" id="trust"></div></section>
   <section><h2>কেন কিনবেন?</h2><ul class="ben" id="ben"></ul></section>
@@ -100,17 +100,18 @@ h1,h2,.price,.bar,.badge,.save{font-family:"Baloo Da 2","Noto Sans Bengali",sans
       <label for="p">মোবাইল নম্বর</label><input id="p" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"><div class="err" id="ep"></div>
       <label for="c">জেলা / এলাকা</label><input id="c" autocomplete="address-level2"><div class="err" id="ec"></div>
       <label for="a">পূর্ণ ঠিকানা</label><textarea id="a" rows="3" autocomplete="street-address" placeholder="বাসা, রোড, থানা, কাছের পরিচিত জায়গা"></textarea><div class="err" id="ea"></div>
+      <label for="z">ডেলিভারি এলাকা</label><select id="z"><option value="dhaka">ঢাকার ভেতরে</option><option value="out">ঢাকার বাইরে (অন্য জেলা)</option></select>
       <label for="q">কয়টি নিবেন?</label><select id="q"></select>
-      <div class="total"><span>ডেলিভারিতে দিবেন</span><span id="tot"></span></div>
+      <div class="total"><span>সর্বমোট</span><span id="tot"></span></div>
       <p class="note" id="delnote"></p>
       <button class="btn" type="submit" id="sub">অর্ডার কনফার্ম করুন</button>
-      <p class="note" style="text-align:center;margin-top:12px">এখন কোনো টাকা দিতে হবে না। পাঠানোর আগে আমরা ফোন করে নিশ্চিত করব।</p>
+      <p class="note" style="text-align:center;margin-top:12px">পাঠানোর আগে আমরা ফোন করে নিশ্চিত করব।</p>
     </form>
     <div class="done" id="done"><h2>অর্ডার পেয়েছি, ধন্যবাদ!</h2><p>শীঘ্রই <b id="dp"></b> নম্বরে ফোন করে কনফার্ম করব।</p><p id="dwa"></p></div>
   </section>
   <footer>আপনার তথ্য শুধু এই অর্ডার ডেলিভারির জন্য ব্যবহার হবে।<div class="site">shodaipabo.com</div></footer>
 </main>
-<div class="sticky" id="sticky"><a class="btn" href="#order">অর্ডার করুন, ডেলিভারিতে টাকা দিন</a></div>
+<div class="sticky" id="sticky"><a class="btn" href="#order">অর্ডার করুন</a></div>
 </div>
 
 <script>
@@ -121,6 +122,7 @@ var en = function(s){return String(s).replace(/[০-৯]/g,function(d){return "�
 var esc = function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
 var C, imgs = [], cur = 0, rimgs = [], rcur = 0, built = false, pid = new URLSearchParams(location.search).get("p") || "";
 var money = function(n){return (C.currency || "৳") + bn(n)};
+function chargeFor(z){ var d0 = C.delivery != null ? C.delivery : null, a = C.deliveryDhaka != null ? C.deliveryDhaka : (d0 != null ? d0 : 70), b = C.deliveryOutside != null ? C.deliveryOutside : (d0 != null ? d0 : 100); return Number(z === "out" ? b : a) || 0; }
 
 function ph(i){var c=["#1f5eff","#7a3cff","#12805c","#c2410c"][i%4];
   return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="'+c+'"/><text x="200" y="210" font-size="26" fill="#fff" text-anchor="middle" font-family="sans-serif">Product photo '+(i+1)+'</text></svg>');}
@@ -128,8 +130,9 @@ function ph(i){var c=["#1f5eff","#7a3cff","#12805c","#c2410c"][i%4];
 function render(d){
   C = d; document.title = (d.title || "অর্ডার করুন") + " | ক্যাশ অন ডেলিভারি";
   $("msg").style.display = "none"; $("app").style.display = "block";
-  $("topbar").textContent = d.topbar || (Number(d.delivery) > 0 ? "সারা দেশে ক্যাশ অন ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।" : "ফ্রি ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।");
-  $("delline").textContent = Number(d.delivery) > 0 ? "ডেলিভারি চার্জ: " + money(d.delivery) : "ডেলিভারি চার্জ: ফ্রি";
+  $("topbar").textContent = d.topbar || ((chargeFor("dhaka") > 0 || chargeFor("out") > 0) ? "সারা দেশে ক্যাশ অন ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।" : "ফ্রি ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।");
+  var cd = chargeFor("dhaka"), co = chargeFor("out"), fm = function(v){return v ? money(v) : "ফ্রি"};
+  $("delline").textContent = cd === co ? "ডেলিভারি চার্জ: " + fm(cd) : "ডেলিভারি চার্জ: ঢাকায় " + fm(cd) + ", ঢাকার বাইরে " + fm(co);
   $("title").textContent = d.title; $("subtitle").textContent = d.subtitle || "";
   $("price").textContent = money(d.price); $("old").textContent = d.oldPrice ? money(d.oldPrice) : "";
   var pct = d.oldPrice > d.price ? Math.round((1 - d.price / d.oldPrice) * 100) : 0;
@@ -152,11 +155,11 @@ function render(d){
   $("chat").innerHTML = chat; $("chatSec").style.display = chat ? "" : "none";
   var sel = $("q"), keep = sel.value; sel.innerHTML = "";
   for(var k=1;k<=5;k++){var o=document.createElement("option");o.value=k;o.textContent=bn(k)+"টি";sel.appendChild(o);} if(keep) sel.value = keep;
-  $("delnote").textContent = d.delivery ? "ডেলিভারি চার্জ " + money(d.delivery) + " সহ" : "ডেলিভারি চার্জ ফ্রি"; total();
+  total();
   if(d.fbPixelId && !window.fbq){!function(f,b,e,v,n,t,s){n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init',d.fbPixelId);fbq('track','PageView');}
   if(!built){ built = true; wire(); }
 }
-function total(){ $("tot").textContent = money(C.price * Number($("q").value) + Number(C.delivery || 0)); }
+function total(){ var f = function(v){return v ? money(v) : "ফ্রি"}, zo = $("z").options; zo[0].textContent = "ঢাকার ভেতরে: " + f(chargeFor("dhaka")); zo[1].textContent = "ঢাকার বাইরে: " + f(chargeFor("out")); var ch = chargeFor($("z").value); $("tot").textContent = money(C.price * Number($("q").value) + ch); $("delnote").textContent = ch ? "ডেলিভারি চার্জ " + money(ch) + " সহ" : "ডেলিভারি চার্জ ফ্রি"; }
 function rdots(){ var x = $("rdots").children; for(var i=0;i<x.length;i++) x[i].className = i===rcur ? "on" : ""; }
 function dots(){ var x = $("dots").children; for(var i=0;i<x.length;i++) x[i].className = i===cur ? "on" : ""; }
 function wire(){
@@ -168,7 +171,7 @@ function wire(){
   function rgo(i){ rcur = (i + rimgs.length) % rimgs.length; rt.scrollTo({left: rcur * rt.clientWidth, behavior:"smooth"}); rdots(); }
   rt.addEventListener("scroll", function(){ var n = Math.round(rt.scrollLeft / rt.clientWidth); if(n !== rcur){ rcur = n; rdots(); } });
   $("rprev").onclick = function(){rgo(rcur-1)}; $("rnext").onclick = function(){rgo(rcur+1)};
-  $("q").onchange = total;
+  $("q").onchange = total; $("z").onchange = total;
   new IntersectionObserver(function(e){ $("sticky").style.display = e[0].isIntersecting ? "none" : "block"; }).observe($("order"));
   $("f").onsubmit = submit;
 }
@@ -180,8 +183,8 @@ function submit(ev){
   chk("c","ec",function(v){return v.length > 1},"জেলা বা এলাকার নাম লিখুন।");
   chk("a","ea",function(v){return v.length > 8},"পূর্ণ ঠিকানা লিখুন, যাতে ডেলিভারি ম্যান খুঁজে পায়।");
   if(!ok) return;
-  var q = Number($("q").value), t = C.price * q + Number(C.delivery || 0);
-  var order = {name:$("n").value.trim(), phone:en($("p").value.trim()), city:$("c").value.trim(), address:$("a").value.trim(), qty:q, total:t, product:C.title};
+  var q = Number($("q").value), ch = chargeFor($("z").value), t = C.price * q + ch;
+  var order = {name:$("n").value.trim(), phone:en($("p").value.trim()), city:$("c").value.trim(), address:$("a").value.trim(), qty:q, total:t, delivery:ch, zone:($("z").value === "out" ? "ঢাকার বাইরে" : "ঢাকা"), product:C.title};
   var btn = $("sub"); btn.disabled = true; btn.textContent = "পাঠানো হচ্ছে...";
   function finish(){
     $("dp").textContent = bn(order.phone);
