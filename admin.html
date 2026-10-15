@@ -38,7 +38,8 @@ a{color:var(--cta)}
     <label>Title (Bangla)</label><input id="title">
     <label>Short line under the title</label><input id="subtitle">
     <div class="row"><div><label>Price</label><input id="price" type="number" inputmode="numeric"></div><div><label>Old price (crossed out)</label><input id="oldPrice" type="number" inputmode="numeric"></div></div>
-    <div class="row"><div><label>Delivery charge in ৳ (0 = free)</label><input id="delivery" type="number" inputmode="numeric"></div><div><label>Stock left (0 = hide)</label><input id="stockLeft" type="number" inputmode="numeric"></div></div>
+    <div class="row"><div><label>Delivery inside Dhaka (৳, 0 = free)</label><input id="deliveryDhaka" type="number" inputmode="numeric"></div><div><label>Delivery outside Dhaka (৳, 0 = free)</label><input id="deliveryOutside" type="number" inputmode="numeric"></div></div>
+    <label>Stock left (0 = hide)</label><input id="stockLeft" type="number" inputmode="numeric">
     <label>Top banner text</label><input id="topbar" placeholder="ফ্রি ডেলিভারি। পণ্য হাতে পেয়ে টাকা দিন।">
     <label>Benefits (one per line: Heading | Detail)</label><textarea id="benefits" rows="5"></textarea>
     <label>Specs (one per line: Name | Value)</label><textarea id="specs" rows="5"></textarea>
@@ -74,11 +75,12 @@ function fillSel(pick){
 }
 $("sel").onchange = function(){ load($("sel").value); };
 $("new").onclick = blank;
-var F = ["title","subtitle","price","oldPrice","delivery","stockLeft","topbar","whatsapp","messenger","fbPixelId"];
+var F = ["title","subtitle","price","oldPrice","deliveryDhaka","deliveryOutside","stockLeft","topbar","whatsapp","messenger","fbPixelId"];
 function blank(){ $("id").value = ""; F.forEach(function(k){ $(k).value = ""; }); $("benefits").value = ""; $("specs").value = "";
   var last = P[Object.keys(P)[0]] || {}; ["whatsapp","messenger","fbPixelId"].forEach(function(k){ $(k).value = last[k] || ""; });
-  $("delivery").value = 0; $("stockLeft").value = 15; images = []; reviews = []; thumbs(); $("lnk").style.display = "none"; }
+  $("deliveryDhaka").value = 70; $("deliveryOutside").value = 100; $("stockLeft").value = 15; images = []; reviews = []; thumbs(); $("lnk").style.display = "none"; }
 function load(id){ var d = P[id]; if(!d) return; $("id").value = id; F.forEach(function(k){ $(k).value = d[k] == null ? "" : d[k]; });
+  if(d.deliveryDhaka == null && d.delivery != null){ $("deliveryDhaka").value = d.delivery; $("deliveryOutside").value = d.delivery; }
   $("benefits").value = (d.benefits||[]).map(function(r){return r.join(" | ")}).join("\n"); $("specs").value = (d.specs||[]).map(function(r){return r.join(" | ")}).join("\n");
   images = (d.images||[]).slice(); reviews = (d.reviews||[]).slice(); thumbs(); link(id); }
 function link(id){ var u = location.href.replace(/admin\.html.*$/, "index.html") + "?p=" + id; $("lk").href = u; $("lk").textContent = u; $("lnk").style.display = "block"; }
@@ -96,7 +98,7 @@ wireUpload("files", function(){return images}, "up", 1000); wireUpload("rfiles",
 $("save").onclick = function(){
   var id = $("id").value.trim().toLowerCase().replace(/[^a-z0-9-]/g, ""); if(!id) return say("Enter a product ID (letters, numbers, dashes).");
   if(!$("title").value.trim() || !(Number($("price").value) > 0)) return say("Title and price are required.");
-  var d = {title:$("title").value.trim(), subtitle:$("subtitle").value.trim(), price:Number($("price").value), oldPrice:Number($("oldPrice").value)||0, delivery:Number($("delivery").value)||0, stockLeft:Number($("stockLeft").value)||0,
+  var d = {title:$("title").value.trim(), subtitle:$("subtitle").value.trim(), price:Number($("price").value), oldPrice:Number($("oldPrice").value)||0, deliveryDhaka:Number($("deliveryDhaka").value)||0, deliveryOutside:Number($("deliveryOutside").value)||0, stockLeft:Number($("stockLeft").value)||0,
     topbar:$("topbar").value.trim(), whatsapp:$("whatsapp").value.replace(/\D/g,""), messenger:$("messenger").value.trim(), fbPixelId:$("fbPixelId").value.trim(), benefits:lines($("benefits").value), specs:lines($("specs").value), images:images, reviews:reviews, currency:"৳"};
   $("save").disabled = true; say("Saving...", true);
   api("save", {id:id, data:d}).then(function(){ P[id] = d; fillSel(id); say("Saved. Your page is updated.", true); }).catch(function(e){ say("Save failed: " + e.message); }).then(function(){ $("save").disabled = false; });
