@@ -12,7 +12,7 @@
 .c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
 label{display:block;font-weight:600;margin:12px 0 4px;font-size:15px}small{color:var(--mute);display:block;margin-top:3px}
 input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:end}
 button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 16px;cursor:pointer;background:var(--cta);color:#241a00}
 button.g{background:var(--line);color:var(--ink)}button.d{background:var(--red);color:#fff}button:disabled{opacity:.5}
 .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.t{position:relative}.t img{width:84px;height:84px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
@@ -56,7 +56,7 @@ a{color:var(--cta)}
 </div>
 
 <script>
-var $ = function(i){return document.getElementById(i)}, S = {ep:"", pw:""}, P = {}, images = [], reviews = [];
+var $ = function(i){return document.getElementById(i)}, S = {ep:"", pw:""}, P = {}, images = [], reviews = [], curId = "";
 try { S = JSON.parse(localStorage.getItem("adm")) || S; } catch(e) {}
 $("ep").value = S.ep; $("pw").value = S.pw;
 function api(action, extra){
@@ -64,27 +64,28 @@ function api(action, extra){
   return fetch(S.ep, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(d){ if(d.error) throw new Error(d.error); return d; });
 }
 function say(t, ok){ $("st").textContent = t; $("st").className = ok ? "ok" : "er"; }
+$("id").onblur = function(){ this.value = this.value.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""); };
 $("go").onclick = function(){
   S = {ep:$("ep").value.trim(), pw:$("pw").value}; $("le").textContent = "";
   api("list").then(function(d){ localStorage.setItem("adm", JSON.stringify(S)); P = d.products; $("login").style.display = "none"; $("main").style.display = "block"; fillSel(Object.keys(P)[0]); })
     .catch(function(e){ $("le").textContent = "Could not log in: " + e.message; });
 };
 function fillSel(pick){
-  var ids = Object.keys(P); $("sel").innerHTML = ids.map(function(i){return '<option value="'+i+'">'+i+' — '+(P[i].title||"").slice(0,40)+'</option>'}).join("");
+  var ids = Object.keys(P); $("sel").innerHTML = ""; ids.forEach(function(i){ var o = document.createElement("option"); o.value = i; o.textContent = i + " — " + (P[i].title || "").slice(0, 40); $("sel").appendChild(o); });
   if(ids.length){ $("sel").value = pick || ids[0]; load($("sel").value); } else blank();
 }
 $("sel").onchange = function(){ load($("sel").value); };
 $("new").onclick = blank;
 var F = ["title","subtitle","price","oldPrice","deliveryDhaka","deliveryOutside","stockLeft","topbar","whatsapp","messenger","fbPixelId"];
-function blank(){ $("id").value = ""; F.forEach(function(k){ $(k).value = ""; }); $("benefits").value = ""; $("specs").value = "";
+function blank(){ curId = ""; $("id").value = ""; F.forEach(function(k){ $(k).value = ""; }); $("benefits").value = ""; $("specs").value = "";
   var last = P[Object.keys(P)[0]] || {}; ["whatsapp","messenger","fbPixelId"].forEach(function(k){ $(k).value = last[k] || ""; });
   $("deliveryDhaka").value = 70; $("deliveryOutside").value = 100; $("stockLeft").value = 15; images = []; reviews = []; thumbs(); $("lnk").style.display = "none"; }
-function load(id){ var d = P[id]; if(!d) return; $("id").value = id; F.forEach(function(k){ $(k).value = d[k] == null ? "" : d[k]; });
+function load(id){ var d = P[id]; if(!d) return; curId = id; $("id").value = id; F.forEach(function(k){ $(k).value = d[k] == null ? "" : d[k]; });
   if(d.deliveryDhaka == null && d.delivery != null){ $("deliveryDhaka").value = d.delivery; $("deliveryOutside").value = d.delivery; }
   $("benefits").value = (d.benefits||[]).map(function(r){return r.join(" | ")}).join("\n"); $("specs").value = (d.specs||[]).map(function(r){return r.join(" | ")}).join("\n");
   images = (d.images||[]).slice(); reviews = (d.reviews||[]).slice(); thumbs(); link(id); }
 function link(id){ var u = location.href.replace(/admin\.html.*$/, "index.html") + "?p=" + id; $("lk").href = u; $("lk").textContent = u; $("lnk").style.display = "block"; }
-function drawThumbs(arr, id){ $(id).innerHTML = arr.map(function(u,i){return '<div class="t"><img src="'+u+'"><b data-i="'+i+'">×</b></div>'}).join("");
+function drawThumbs(arr, id){ $(id).innerHTML = arr.map(function(u,i){return '<div class="t"><img src="'+String(u).replace(/"/g,"&quot;").replace(/</g,"&lt;")+'"><b data-i="'+i+'">×</b></div>'}).join("");
   Array.prototype.forEach.call($(id).querySelectorAll("b"), function(b){ b.onclick = function(){ arr.splice(Number(b.dataset.i),1); thumbs(); }; }); }
 function thumbs(){ drawThumbs(images, "thumbs"); drawThumbs(reviews, "rthumbs"); }
 function lines(t){ return t.split("\n").map(function(l){return l.trim()}).filter(Boolean).map(function(l){ var p = l.split("|"); return [p[0].trim(), (p.slice(1).join("|")||"").trim()]; }); }
@@ -96,10 +97,11 @@ function wireUpload(inp, getArr, st, max){ $(inp).onchange = async function(){
   $(st).textContent = "Uploaded. Press Save product to publish."; }; }
 wireUpload("files", function(){return images}, "up", 1000); wireUpload("rfiles", function(){return reviews}, "rup", 1400);
 $("save").onclick = function(){
-  var id = $("id").value.trim().toLowerCase().replace(/[^a-z0-9-]/g, ""); if(!id) return say("Enter a product ID (letters, numbers, dashes).");
+  var id = $("id").value.trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""); if(!id) return say("Enter a product ID (letters, numbers, dashes).");
   if(!$("title").value.trim() || !(Number($("price").value) > 0)) return say("Title and price are required.");
   var d = {title:$("title").value.trim(), subtitle:$("subtitle").value.trim(), price:Number($("price").value), oldPrice:Number($("oldPrice").value)||0, deliveryDhaka:Number($("deliveryDhaka").value)||0, deliveryOutside:Number($("deliveryOutside").value)||0, stockLeft:Number($("stockLeft").value)||0,
     topbar:$("topbar").value.trim(), whatsapp:$("whatsapp").value.replace(/\D/g,""), messenger:$("messenger").value.trim(), fbPixelId:$("fbPixelId").value.trim(), benefits:lines($("benefits").value), specs:lines($("specs").value), images:images, reviews:reviews, currency:"৳"};
+  if(P[id] && id !== curId && !confirm("A product with ID \"" + id + "\" already exists. Overwrite it?")) return;
   $("save").disabled = true; say("Saving...", true);
   api("save", {id:id, data:d}).then(function(){ P[id] = d; fillSel(id); say("Saved. Your page is updated.", true); }).catch(function(e){ say("Save failed: " + e.message); }).then(function(){ $("save").disabled = false; });
 };
