@@ -51,7 +51,7 @@ a{color:var(--cta)}
     <label>Meta Pixel ID (optional)</label><input id="fbPixelId">
   </div>
   <div id="st"></div>
-  <p><button id="save">Save product</button> <button class="d" id="del">Delete</button></p>
+  <p><button id="save">Save product</button> <button class="d" id="del">Delete</button> <button class="g" id="fast">Download fast page</button></p>
   <div class="c" id="lnk" style="display:none">Landing page link:<br><a id="lk" target="_blank"></a></div>
 </div>
 
@@ -106,6 +106,13 @@ $("save").onclick = function(){
   api("save", {id:id, data:d}).then(function(){ P[id] = d; fillSel(id); say("Saved. Your page is updated.", true); }).catch(function(e){ say("Save failed: " + e.message); }).then(function(){ $("save").disabled = false; });
 };
 $("del").onclick = function(){ var id = $("id").value.trim(); if(!id || !P[id] || !confirm("Delete " + id + "?")) return; api("delete", {id:id}).then(function(){ delete P[id]; fillSel(); say("Deleted.", true); }).catch(function(e){ say(e.message); }); };
+$("fast").onclick = function(){ var id = curId || $("id").value.trim(), d = P[id]; if(!d) return say("Save the product first, then download its fast page.");
+  fetch("index.html", {cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.text(); }).then(function(h){
+    var inj = "<script>window.PRELOAD_ID=" + JSON.stringify(id) + ";window.PRELOAD=" + JSON.stringify(d).replace(/</g, "\\u003c") + "<\/script>";
+    h = h.replace("<head>", "<head>" + inj);
+    var l = document.createElement("a"); l.href = URL.createObjectURL(new Blob([h], {type:"text/html"})); l.download = id + ".html"; document.body.appendChild(l); l.click(); l.remove();
+    say("Downloaded " + id + ".html. Upload it to GitHub next to index.html and use .../" + id + ".html as your ad link.", true);
+  }).catch(function(){ say("Could not read index.html. Open this admin from your GitHub site, not from a file on your computer."); }); };
 if(S.ep && S.pw) $("go").click();
 </script>
 </div></body>
